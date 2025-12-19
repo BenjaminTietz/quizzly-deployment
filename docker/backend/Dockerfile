@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 COPY backend/requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt  && pip install gunicorn
+# remove pip install gunicorn, it is already included in requirements.txt
 
 # Copy backend source code
 COPY backend/ .

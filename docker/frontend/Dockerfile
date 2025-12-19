@@ -1,34 +1,17 @@
 # ===============================
-# Frontend Dockerfile (NGINX)
+# Frontend Dockerfile (Vanilla JS)
 # ===============================
 
-# ---------- Build Stage ----------
-FROM node:20-alpine AS build
-
-WORKDIR /app
-
-# Install dependencies
-COPY frontend/package*.json ./
-RUN npm install
-
-# Copy source code
-COPY frontend/ .
-
-# Build frontend
-RUN npm run build
-
-
-# ---------- Runtime Stage ----------
 FROM nginx:alpine
 
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx config
+# Custom nginx configuration
 COPY docker/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built frontend
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy static frontend files
+COPY frontend/ /usr/share/nginx/html
 
 EXPOSE 80
 

@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: quizly_backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - quizly_network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: quizly_frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - quizly_network
+
+  db:
+    image: postgres:16-alpine
+    container_name: quizly_db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - quizly_network
+
+volumes:
+  postgres_data:
+
+networks:
+  quizly_network:
+    driver: bridge
